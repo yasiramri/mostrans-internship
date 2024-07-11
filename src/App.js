@@ -1,3 +1,4 @@
+// /src/App.js
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
@@ -40,13 +41,14 @@ const GET_CHARACTERS = gql`
 
 function App() {
   const [pageNumber, setPageNumber] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("Smith");
+  const [searchStatus, setSearchStatus] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const { loading, error, data, refetch } = useQuery(GET_CHARACTERS, {
     variables: {
       page: pageNumber,
       filter: {
-        name: searchTerm, // Pass the search term as part of the filter
+        name: searchTerm,
       },
     },
   });
@@ -56,34 +58,62 @@ function App() {
 
   const { info, results } = data.characters;
 
-  const handleSearch = (searchTerm) => {
-    setSearchTerm(searchTerm);
-    setPageNumber(1); // Reset page number when performing a new search
-    refetch(); // Refetch the data with the new search term
+  const handleSearch = (term) => {
+    setSearchTerm(term);
+    refetch({
+      page: 1,
+      filter: {
+        name: term,
+      },
+    }).then((result) => {
+      if (result.data.characters.results.length > 0) {
+        setSearchStatus(true);
+      } else {
+        setSearchStatus(false);
+      }
+    });
+    setPageNumber(1);
+  };
+
+  const handlePageChange = (selectedItem) => {
+    const selectedPage = selectedItem.selected + 1;
+    setPageNumber(selectedPage);
+    refetch({
+      page: selectedPage,
+      filter: {
+        name: searchTerm,
+      },
+    });
   };
 
   return (
     <div className="App">
       <h1 className="text-center text-success ubuntu my-4">
-        MOSTRANS ASSIGMENT
+        MOSTRANS ASSIGNMENT
       </h1>
 
-      <Search onSearch={handleSearch} />
+      <Search
+        onSearch={handleSearch}
+        onSearchStatusChange={setSearchStatus}
+        setPageNumber={setPageNumber}
+      />
 
       <div className="container">
         <div className="row">
-          <div className="col-3">
-            <Filters />
-          </div>
+          <Filters />
           <div className="col-8">
-            <div className="row">
-              <Cards results={results} />
-            </div>
+            {searchStatus ? (
+              <div className="row">
+                <Cards results={results} />
+              </div>
+            ) : (
+              <p className="text-center">Karakter tidak ditemukan.</p>
+            )}
           </div>
         </div>
       </div>
 
-      <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
+      <Pagination pageCount={info.pages} onPageChange={handlePageChange} />
     </div>
   );
 }
