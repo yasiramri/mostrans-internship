@@ -1,23 +1,29 @@
+// /src/components/Pagination/Pagination.js
 import React from "react";
+import ReactPaginate from "react-paginate";
+import styles from "./Pagination.module.scss"; // Import the SCSS file
 
-const Pagination = ({ pageNumber, setPageNumber }) => {
-  let next = () => {
-    setPageNumber((x) => x + 1);
-  };
-  let prev = () => {
-    if (pageNumber === 1) return;
-    setPageNumber((x) => x - 1);
-  };
-
+const Pagination = ({ pageCount, onPageChange }) => {
   return (
-    <div className="container d-flex justify-content-center gap-5 my-5">
-      <button onClick={prev} className="btn btn-primary">
-        Prev
-      </button>
-      <button onClick={next} className="btn btn-primary">
-        Next
-      </button>
-    </div>
+    <ReactPaginate
+      previousLabel={"Previous"}
+      nextLabel={"Next"}
+      breakLabel={"..."}
+      breakClassName={"break-me"}
+      pageCount={pageCount}
+      marginPagesDisplayed={2}
+      pageRangeDisplayed={5}
+      onPageChange={onPageChange}
+      containerClassName={styles.pagination}
+      subContainerClassName={"pages pagination"}
+      activeClassName={"active"}
+      pageClassName={styles.page}
+      previousClassName={styles.page}
+      nextClassName={styles.page}
+      breakClassName={styles.page}
+      activeClassName={styles.active}
+      disabledClassName={styles.disabled}
+    />
   );
 };
 
