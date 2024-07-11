@@ -7,6 +7,7 @@ import { ApolloProvider, useQuery, gql } from "@apollo/client";
 import client from "./graphql/client";
 import Filters from "./components/Filters/Filters";
 import Cards from "./components/Cards/Cards";
+import Pagination from "./components/Pagination/Pagination";
 
 const GET_CHARACTERS = gql`
   query Characters($page: Int) {
@@ -68,6 +69,8 @@ function App() {
           </div>
         </div>
       </div>
+
+      <Pagination pageNumber={pageNumber} setPageNumber={setPageNumber} />
     </div>
   );
 }
