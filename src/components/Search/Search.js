@@ -1,7 +1,8 @@
+// /src/components/Search/Search.js
 import React, { useState } from "react";
 import styles from "./Search.module.scss";
 
-const Search = ({ onSearch }) => {
+const Search = ({ onSearch, onSearchStatusChange, setPageNumber }) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleChange = (event) => {
@@ -11,6 +12,8 @@ const Search = ({ onSearch }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSearch(searchTerm.trim());
+    setPageNumber(1);
+    onSearchStatusChange(true);
   };
 
   return (
