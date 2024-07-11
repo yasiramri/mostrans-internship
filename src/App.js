@@ -1,5 +1,3 @@
-// src/App.js
-
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
@@ -8,10 +6,11 @@ import client from "./graphql/client";
 import Filters from "./components/Filters/Filters";
 import Cards from "./components/Cards/Cards";
 import Pagination from "./components/Pagination/Pagination";
+import Search from "./components/Search/Search";
 
 const GET_CHARACTERS = gql`
-  query Characters($page: Int) {
-    characters(page: $page) {
+  query Characters($page: Int, $filter: FilterCharacter) {
+    characters(page: $page, filter: $filter) {
       info {
         count
         pages
@@ -41,9 +40,15 @@ const GET_CHARACTERS = gql`
 
 function App() {
   const [pageNumber, setPageNumber] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("Smith");
 
-  const { loading, error, data } = useQuery(GET_CHARACTERS, {
-    variables: { page: pageNumber },
+  const { loading, error, data, refetch } = useQuery(GET_CHARACTERS, {
+    variables: {
+      page: pageNumber,
+      filter: {
+        name: searchTerm, // Pass the search term as part of the filter
+      },
+    },
   });
 
   if (loading) return <p>Loading...</p>;
@@ -51,11 +56,19 @@ function App() {
 
   const { info, results } = data.characters;
 
+  const handleSearch = (searchTerm) => {
+    setSearchTerm(searchTerm);
+    setPageNumber(1); // Reset page number when performing a new search
+    refetch(); // Refetch the data with the new search term
+  };
+
   return (
     <div className="App">
       <h1 className="text-center text-success ubuntu my-4">
         MOSTRANS ASSIGMENT
       </h1>
+
+      <Search onSearch={handleSearch} />
 
       <div className="container">
         <div className="row">
