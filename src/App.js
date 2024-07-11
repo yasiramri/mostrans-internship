@@ -1,19 +1,55 @@
-import React, { useState, useEffect } from "react";
+// src/App.js
+
+import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
+import { ApolloProvider, useQuery, gql } from "@apollo/client";
+import client from "./graphql/client";
 import Filters from "./components/Filters/Filters";
 import Cards from "./components/Cards/Cards";
 
-function App() {
-  let [pageNumber, setPageNumber] = useState(1);
-  let api = `https://rickandmortyapi.com/api/character/?page=${pageNumber}`;
+const GET_CHARACTERS = gql`
+  query Characters($page: Int) {
+    characters(page: $page) {
+      info {
+        count
+        pages
+        next
+        prev
+      }
+      results {
+        id
+        name
+        status
+        species
+        type
+        gender
+        origin {
+          name
+          dimension
+        }
+        location {
+          name
+          dimension
+        }
+        image
+      }
+    }
+  }
+`;
 
-  useEffect(() => {
-    (async function () {
-      let data = await fetch(api).then((res) => res.json());
-      console.log(data);
-    })();
-  }, [api]);
+function App() {
+  const [pageNumber, setPageNumber] = useState(1);
+
+  const { loading, error, data } = useQuery(GET_CHARACTERS, {
+    variables: { page: pageNumber },
+  });
+
+  if (loading) return <p>Loading...</p>;
+  if (error) return <p>Error :(</p>;
+
+  const { info, results } = data.characters;
+
   return (
     <div className="App">
       <h1 className="text-center text-success ubuntu my-4">
@@ -27,9 +63,7 @@ function App() {
           </div>
           <div className="col-8">
             <div className="row">
-              <Cards />
-              <Cards />
-              <Cards />
+              <Cards results={results} />
             </div>
           </div>
         </div>
@@ -38,4 +72,12 @@ function App() {
   );
 }
 
-export default App;
+function AppWithApollo() {
+  return (
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>
+  );
+}
+
+export default AppWithApollo;
