@@ -1,0 +1,42 @@
+/* /src/components/Pagination/Pagination.module.scss */
+.pagination {
+  display: flex;
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+  justify-content: center;
+
+  li {
+    margin: 0 5px;
+
+    a {
+      padding: 10px 15px;
+      text-decoration: none;
+      color: #157448;
+      border: 1px solid #dee2e6;
+      border-radius: 5px;
+      display: block;
+      font-size: 14px;
+      background-color: #fff;
+      transition: background-color 0.3s, color 0.3s;
+
+      &:hover {
+        background-color: #157448;
+        color: #fff;
+      }
+    }
+
+    &.active a {
+      background-color: #157448;
+      color: #fff;
+      border-color: #157448;
+    }
+
+    &.disabled a {
+      color: #6c757d;
+      pointer-events: none;
+      border-color: #dee2e6;
+      background-color: #e9ecef;
+    }
+  }
+}
