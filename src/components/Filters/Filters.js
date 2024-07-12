@@ -7,7 +7,7 @@ import Species from "../Filters/Category/Species";
 
 const Filters = ({ setStatus, setGender, setSpecies, clearFilters }) => {
   return (
-    <div className="col-4">
+    <div className="col-lg-4 col-12 mb-5">
       <div className="text-center fw-bold fs-4 mb-2">Filters</div>
       <div className="accordion" id="accordionExample">
         <Status setStatus={setStatus} />
