@@ -18,7 +18,7 @@ const Search = ({ onSearch, onSearchStatusChange, setPageNumber }) => {
 
   return (
     <form onSubmit={handleSubmit} className="mb-4">
-      <div className="d-flex justify-content-center gap-4 mb-5">
+      <div className="d-flex flex-sm-row flex-column justify-content-center align-items-center gap-4 mb-5">
         <input
           type="text"
           className={`form-control ${styles.input}`}
