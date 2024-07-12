@@ -89,9 +89,7 @@ const Location = () => {
             (characterId) => assignments[characterId] === selectedLocation
           )
           .map((characterId) => (
-            <div key={characterId} className="col">
-              <CharacterDetails characterId={characterId} />
-            </div>
+            <CharacterDetails key={characterId} characterId={characterId} />
           ))}
       </div>
     </div>
@@ -110,38 +108,49 @@ const CharacterDetails = ({ characterId }) => {
 
   return (
     <Link
+      style={{ textDecoration: "none" }}
       to={`/${characterId}`}
-      className={`col-4 mb-4 position-relative text-dark text-decoration-none ${styles.card}`}
+      className="col-lg-4 col-md-6 col-12 mb-4 position-relative text-dark"
     >
-      <div className="card mb-4">
-        <img src={image} className={`card-img-top ${styles.img}`} alt={name} />
-        <div className="card-body">
-          <h5 className={`card-title ${styles.cardTitle}`}>{name}</h5>
-          <p className={`card-text ${styles.cardText}`}>
-            <strong>Status:</strong> {status}
-          </p>
-          <p className={`card-text ${styles.cardText}`}>
-            <strong>Species:</strong> {species}
-          </p>
-          <p className={`card-text ${styles.cardText}`}>
-            <strong>Origin:</strong> {origin.name}
-          </p>
-          <p className={`card-text ${styles.cardText}`}>
-            <strong>Gender:</strong> {gender}
-          </p>
-          <div
-            className={`badge ${
-              status === "Dead"
-                ? styles.bgDanger
-                : status === "Alive"
-                ? styles.bgPrimary
-                : styles.bgSecondary
-            }`}
-          >
-            {status}
+      <div
+        className={`${styles.cards} d-flex flex-column justify-content-center`}
+      >
+        <img src={image} alt="" className={`${styles.img} img-fluid`} />
+        <div style={{ padding: "10px" }} className="content">
+          <div className="fs-4 fw-bold mb-4">{name}</div>
+          <div className="">
+            <div className="fs-6">{species}</div>
+            <div className="fs-6">{gender}</div>
           </div>
         </div>
       </div>
+      {(() => {
+        if (status === "Dead") {
+          return (
+            <div
+              className={`${styles.badge} position-absolute badge bg-danger`}
+            >
+              {status}
+            </div>
+          );
+        } else if (status === "Alive") {
+          return (
+            <div
+              className={`${styles.badge} position-absolute badge bg-primary`}
+            >
+              {status}
+            </div>
+          );
+        } else {
+          return (
+            <div
+              className={`${styles.badge} position-absolute badge bg-secondary`}
+            >
+              {status}
+            </div>
+          );
+        }
+      })()}
     </Link>
   );
 };
