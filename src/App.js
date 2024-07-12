@@ -1,5 +1,3 @@
-// /src/App.js
-
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
@@ -9,6 +7,11 @@ import Filters from "./components/Filters/Filters";
 import Cards from "./components/Cards/Cards";
 import Pagination from "./components/Pagination/Pagination";
 import Search from "./components/Search/Search";
+import Navbar from "./components/Navbar/Navbar";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Episodes from "./components/Pages/Episodes";
+import CardDetail from "./components/Cards/CardDetail";
+import Location from "./components/Pages/Location";
 
 const GET_CHARACTERS = gql`
   query Characters($page: Int, $filter: FilterCharacter) {
@@ -40,7 +43,7 @@ const GET_CHARACTERS = gql`
   }
 `;
 
-function App() {
+function Home() {
   const [pageNumber, setPageNumber] = useState(1);
   const [searchStatus, setSearchStatus] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
@@ -124,16 +127,12 @@ function App() {
 
   return (
     <div className="App">
-      <h1 className="text-center text-success ubuntu my-4">
-        MOSTRANS ASSIGNMENT
-      </h1>
-
+      <h1 className="text-center text-success ubuntu my-4">Rick & Morty</h1>
       <Search
         onSearch={handleSearch}
         onSearchStatusChange={setSearchStatus}
         setPageNumber={setPageNumber}
       />
-
       <div className="container">
         <div className="row">
           <Filters
@@ -153,9 +152,24 @@ function App() {
           </div>
         </div>
       </div>
-
       <Pagination pageCount={info.pages} onPageChange={handlePageChange} />
     </div>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <Navbar />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/:id" element={<CardDetail />} />
+        <Route path="/episodes" element={<Episodes />} />
+        <Route path="/episodes/:id" element={<CardDetail />} />
+        <Route path="/episodes/:id" element={<CardDetail />} />{" "}
+        <Route path="/location/" element={<Location />} />{" "}
+      </Routes>
+    </Router>
   );
 }
 
