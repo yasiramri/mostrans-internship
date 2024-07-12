@@ -1,4 +1,5 @@
 // /src/App.js
+
 import React, { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap";
@@ -43,12 +44,18 @@ function App() {
   const [pageNumber, setPageNumber] = useState(1);
   const [searchStatus, setSearchStatus] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [status, setStatus] = useState("");
+  const [gender, setGender] = useState("");
+  const [species, setSpecies] = useState("");
 
   const { loading, error, data, refetch } = useQuery(GET_CHARACTERS, {
     variables: {
       page: pageNumber,
       filter: {
         name: searchTerm,
+        status: status,
+        gender: gender,
+        species: species,
       },
     },
   });
@@ -64,6 +71,9 @@ function App() {
       page: 1,
       filter: {
         name: term,
+        status: status,
+        gender: gender,
+        species: species,
       },
     }).then((result) => {
       if (result.data.characters.results.length > 0) {
@@ -82,8 +92,34 @@ function App() {
       page: selectedPage,
       filter: {
         name: searchTerm,
+        status: status,
+        gender: gender,
+        species: species,
       },
     });
+  };
+
+  const clearFilters = () => {
+    setStatus("");
+    setGender("");
+    setSpecies("");
+    setSearchTerm("");
+    refetch({
+      page: 1,
+      filter: {
+        name: "",
+        status: "",
+        gender: "",
+        species: "",
+      },
+    }).then((result) => {
+      if (result.data.characters.results.length > 0) {
+        setSearchStatus(true);
+      } else {
+        setSearchStatus(false);
+      }
+    });
+    setPageNumber(1);
   };
 
   return (
@@ -100,7 +136,12 @@ function App() {
 
       <div className="container">
         <div className="row">
-          <Filters />
+          <Filters
+            setStatus={setStatus}
+            setGender={setGender}
+            setSpecies={setSpecies}
+            clearFilters={clearFilters}
+          />
           <div className="col-8">
             {searchStatus ? (
               <div className="row">
