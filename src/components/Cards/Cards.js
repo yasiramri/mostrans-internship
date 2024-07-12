@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 
 const Cards = ({ results, page }) => {
   let display;
-  console.log(results);
 
   if (results) {
     display = results.map((x) => {
