@@ -81,15 +81,12 @@ const CardDetails = () => {
     request.onsuccess = function (event) {
       const db = event.target.result;
 
-      // Start a transaction to write data
       const transaction = db.transaction(["assignments"], "readwrite");
       const objectStore = transaction.objectStore("assignments");
 
-      // Save assignment to IndexedDB
       objectStore.put({ id: characterId, locationName });
 
       transaction.oncomplete = function () {
-        console.log("Assignment saved to IndexedDB.");
         const newAssignments = { ...assignments, [characterId]: locationName };
         setAssignments(newAssignments);
       };
