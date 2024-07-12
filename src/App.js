@@ -141,7 +141,7 @@ function Home() {
             setSpecies={setSpecies}
             clearFilters={clearFilters}
           />
-          <div className="col-8">
+          <div className="col-lg-8 col-12">
             {searchStatus ? (
               <div className="row">
                 <Cards results={results} />
